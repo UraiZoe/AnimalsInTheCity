@@ -12,7 +12,7 @@ const db = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
   password: '',
-  database: 'your_database_name',
+  database: 'varosvilag',
   port:3306
 });
 
@@ -25,7 +25,7 @@ db.connect((err) => {
 });
 
 // Visszaadja minden faj adatait
-app.get('/api/species', (req, res) => {
+app.get('/species', (req, res) => {
   const sql = 'SELECT species_id, latin_name, hungarian_name, family, state FROM species';
   db.query(sql, (err, results) => {
     if (err) {
@@ -37,7 +37,7 @@ app.get('/api/species', (req, res) => {
 });
 
 //Visszaadja a kontinensek listáját
-app.get('/api/continents', (req, res) => {
+app.get('/continents', (req, res) => {
   const sql = 'SELECT continent_id, name FROM Continents';
   db.query(sql, (err, results) => {
     if (err) {
@@ -48,26 +48,8 @@ app.get('/api/continents', (req, res) => {
   });
 });
 
-//Visszaadja egy faj előfordulási országait
-app.get('/api/species/:id/countries', (req, res) => {
-  const speciesId = req.params.id;
-  const sql = `
-    SELECT c.country_id, c.iso_code, c.name
-    FROM Species_Country sc
-    JOIN Countries c ON sc.country_id = c.country_id
-    WHERE sc.species_id = ?
-  `;
-  db.query(sql, [speciesId], (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Adatbázis hiba' });
-    }
-    res.json(results);
-  });
-});
-
 //Új faj hozzáadása
-app.post('/api/species', (req, res) => {
+app.post('/newSpecies', (req, res) => {
   const { latin_name, hungarian_name, family, state } = req.body;
   const sql = 'INSERT INTO species (latin_name, hungarian_name, family, state) VALUES (?, ?, ?, ?)';
   db.query(sql, [latin_name, hungarian_name, family, state], (err, result) => {
