@@ -36,18 +36,6 @@ app.get('/species', (req, res) => {
   });
 });
 
-//Visszaadja a kontinensek listáját
-app.get('/continents', (req, res) => {
-  const sql = 'SELECT continent_id, name FROM Continents';
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Adatbázis hiba' });
-    }
-    res.json(results);
-  });
-});
-
 //Új faj hozzáadása
 app.post('/newSpecies', (req, res) => {
   const { latin_name, hungarian_name, family, state } = req.body;
